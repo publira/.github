@@ -1,0 +1,18 @@
+{
+  "name": "@publira/monorepo",
+  "version": "0.1.0",
+  "description": "",
+  "license": "Apache-2.0",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "check": "ultracite check",
+    "fix": "ultracite fix"
+  },
+  "devDependencies": {
+    "oxfmt": "0.44.0",
+    "oxlint": "1.59.0",
+    "ultracite": "7.4.4"
+  },
+  "packageManager": "npm@11.12.1"
+}

@@ -2,7 +2,7 @@
 
 Welcome to the `.github` repository for **Publira**.
 
-This repository serves as a centralized hub for default community health files, templates, and configurations used across all open-source projects within the Publira organization. 
+This repository serves as a centralized hub for default community health files, templates, and configurations used across all open-source projects within the Publira organization.
 
 By maintaining these files here, we ensure a consistent and welcoming experience for contributors, maintainers, and users across our entire ecosystem.
 
