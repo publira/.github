@@ -12,7 +12,7 @@
   "devDependencies": {
     "oxfmt": "0.44.0",
     "oxlint": "1.59.0",
-    "ultracite": "7.4.4"
+    "ultracite": "7.5.9"
   },
   "packageManager": "npm@11.12.1"
 }
