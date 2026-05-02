@@ -10,7 +10,7 @@
     "fix": "ultracite fix"
   },
   "devDependencies": {
-    "oxfmt": "0.44.0",
+    "oxfmt": "0.47.0",
     "oxlint": "1.59.0",
     "ultracite": "7.4.4"
   },
