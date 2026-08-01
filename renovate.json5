@@ -2,8 +2,8 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:best-practices"],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
-  // monorepo: presets に無いが、Publira で一緒に上げたい依存関係
-  // （group:monorepos がカバーしないパッケージ向け）
+  // Group monorepo-style deps that Renovate's monorepo presets do not cover
+  // (complements group:monorepos from config:best-practices).
   packageRules: [
     // connect-es (https://github.com/connectrpc/connect-es)
     {
@@ -26,8 +26,8 @@
       matchPackageNames: ["@bufbuild/**"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
-    // oxc: monorepo:oxlint は oxlint / eslint-plugin-oxlint のみで oxfmt が漏れる。
-    // どちらも oxc-project/oxc 由来のため oxc monorepo としてまとめる。
+    // oxc: monorepo:oxlint only covers oxlint / eslint-plugin-oxlint.
+    // oxfmt is also from oxc-project/oxc, so group them as oxc monorepo.
     {
       groupName: "oxc monorepo",
       matchDatasources: ["npm"],
