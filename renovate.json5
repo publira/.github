@@ -2,4 +2,43 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:best-practices"],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
+  // monorepo: presets に無いが、Publira で一緒に上げたい依存関係
+  // （group:monorepos がカバーしないパッケージ向け）
+  packageRules: [
+    // connect-es (https://github.com/connectrpc/connect-es)
+    {
+      groupName: "connect-es monorepo",
+      matchDatasources: ["npm"],
+      matchPackageNames: ["@connectrpc/**"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // connect-go (https://github.com/connectrpc/connect-go)
+    {
+      groupName: "connect-go monorepo",
+      matchDatasources: ["go"],
+      matchPackageNames: ["connectrpc.com/**"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // protobuf-es (https://github.com/bufbuild/protobuf-es)
+    {
+      groupName: "protobuf-es monorepo",
+      matchDatasources: ["npm"],
+      matchPackageNames: ["@bufbuild/**"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // oxc: monorepo:oxlint は oxlint / eslint-plugin-oxlint のみで oxfmt が漏れる。
+    // どちらも oxc-project/oxc 由来のため oxc monorepo としてまとめる。
+    {
+      groupName: "oxc monorepo",
+      matchDatasources: ["npm"],
+      matchPackageNames: [
+        "oxfmt",
+        "oxlint",
+        "eslint-plugin-oxlint",
+        "@oxfmt/**",
+        "@oxlint/**",
+      ],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+  ],
 }
