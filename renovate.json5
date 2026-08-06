@@ -2,6 +2,17 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:best-practices"],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
+  // Flutter-related ignores (shared by consumer repos; do not re-declare locally):
+  // - SDK exact pins: advance only by upgrading the Flutter SDK.
+  // - flutter-plugin-loader: Gradle plugin id, not a versioned registry dep.
+  ignoreDeps: [
+    "characters",
+    "dev.flutter.flutter-plugin-loader",
+    "matcher",
+    "meta",
+    "test_api",
+    "vector_math",
+  ],
   // Group monorepo-style deps that Renovate's monorepo presets do not cover
   // (complements group:monorepos from config:best-practices).
   packageRules: [
@@ -39,6 +50,13 @@
         "@oxlint/**",
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // pubspec.lock must be resolved with the project's Flutter SDK.
+    {
+      description: "Disable pub lockFileMaintenance so Renovate does not rewrite SDK-pinned transitives (which flutter pub get then reverts).",
+      matchManagers: ["pub"],
+      matchUpdateTypes: ["lockFileMaintenance"],
+      enabled: false,
     },
   ],
 }
