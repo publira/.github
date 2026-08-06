@@ -4,13 +4,7 @@
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
   // Flutter/Dart SDK pins these exactly. Advance only by upgrading the Flutter
   // SDK; lockFileMaintenance must not float them to registry latest.
-  ignoreDeps: [
-    "characters",
-    "matcher",
-    "meta",
-    "test_api",
-    "vector_math",
-  ],
+  ignoreDeps: ["characters", "matcher", "meta", "test_api", "vector_math"],
   // Group monorepo-style deps that Renovate's monorepo presets do not cover
   // (complements group:monorepos from config:best-practices).
   packageRules: [
@@ -51,8 +45,7 @@
     },
     // pubspec.lock must be resolved with the project's Flutter SDK.
     {
-      description:
-        "Disable pub lockFileMaintenance so Renovate does not rewrite SDK-pinned transitives (which flutter pub get then reverts).",
+      description: "Disable pub lockFileMaintenance so Renovate does not rewrite SDK-pinned transitives (which flutter pub get then reverts).",
       matchManagers: ["pub"],
       matchUpdateTypes: ["lockFileMaintenance"],
       enabled: false,
