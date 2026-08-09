@@ -1,6 +1,14 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:best-practices"],
+  // config:best-practices enables no customManagers preset, so `# renovate:`-annotated
+  // `*_VERSION` pins go stale. Both presets match only on that annotation.
+  extends: [
+    "config:best-practices",
+    // Dockerfile
+    "customManagers:dockerfileVersions",
+    // GitHub Actions workflows
+    "customManagers:githubActionsVersions",
+  ],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
   // Flutter-related ignores (shared by consumer repos; do not re-declare locally):
   // - SDK exact pins: advance only by upgrading the Flutter SDK.
