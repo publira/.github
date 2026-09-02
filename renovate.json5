@@ -19,6 +19,26 @@
       ],
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
     },
+    {
+      customType: "regex",
+      // The npm manager does not read `devEngines` yet
+      // (renovatebot/renovate#38067), so a repository that pins Node.js there
+      // — where `pnpm/setup` reads it — would stop receiving updates for it.
+      // A repository without `devEngines.runtime` matches nothing and is
+      // unaffected.
+      //
+      // The lock file stays in step: the npm manager derives the lock files to
+      // regenerate from the paths of the updated package files rather than from
+      // the manager that updated them, so a lock file recording the runtime is
+      // rebuilt in the same branch.
+      description: "Update the Node.js runtime pinned in package.json devEngines",
+      managerFilePatterns: ["/(^|/)package\\.json$/"],
+      matchStrings: [
+        '"runtime":\\s*\\{[^}]*"name":\\s*"node",\\s*"version":\\s*"(?<currentValue>[^"]+)"',
+      ],
+      datasourceTemplate: "node-version",
+      depNameTemplate: "node",
+    },
   ],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
   // Flutter-related ignores (shared by consumer repos; do not re-declare locally):
