@@ -11,6 +11,7 @@ By maintaining these files here, we ensure a consistent and welcoming experience
 - **[Organization Profile](profile/README.md):** The public landing page displayed at `https://github.com/publira`.
 - **Issue & Pull Request Templates:** Default templates (`ISSUE_TEMPLATE`, `PULL_REQUEST_TEMPLATE.md`) to help contributors provide structured and actionable information when reporting bugs, requesting features, or submitting code.
 - **Community Guidelines:** Centralized documents such as `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` to establish clear expectations and a safe environment for everyone.
+- **[Security Policy](SECURITY.md):** How to report a vulnerability privately in any Publira repository, and what happens after a report arrives.
 
 ## Explore Our Ecosystem
 
