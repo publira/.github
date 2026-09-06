@@ -1,23 +1,33 @@
 # Welcome to Publira
 
-We build modern tools and ecosystems for digital publishing, focusing on e-books and webcomics (manga).
+Publira builds digital publishing in the open: a publishing platform for manga and novels, and the e-book and comic libraries that grew out of it. Every repository below is open source.
 
-## Featured Open Source Projects
+## The platform
 
-Here are some of our core open-source repositories that power our ecosystem:
+### [publira](https://github.com/publira/publira)
+
+A multi-tenant SaaS that gives publishers with limited IT resources a digital distribution platform for manga and novels, which they can run under their own brand. Publishers and editors register the book information they receive from creators, and readers read it on the web or on mobile. It is built for portability, ease of operation, and freedom from vendor lock-in.
+
+## Libraries and applications
 
 ### [epub](https://github.com/publira/epub)
 
-A fast, memory-efficient EPUB parsing and generation library written in Go. It features file-system-agnostic stream processing (`io.ReaderAt` / `io.Writer`) and strict validation compliance with major Japanese e-book formats (EBPAJ, KADOKAWA) and Kindle publishing guidelines.
-
-### [epub-web](https://github.com/publira/epub-web)
-
-A web application that generates fixed-layout EPUBs from image sequences and extracts images from existing EPUB files. The backend is powered by Go, and the frontend is built with React, TypeScript, and Tailwind CSS. It is fully containerized and Docker-ready for instant deployment.
+A Go library for decoding, encoding, and validating EPUB 3 files. It is built around `io.ReaderAt` and `io.Writer` rather than a filesystem, opens assets on demand to keep memory use low, and validates against EBPAJ- and KADOKAWA-style conventions.
 
 ### [comic-viewer](https://github.com/publira/comic-viewer)
 
-A highly extensible, headless-UI inspired React comic viewer designed for modern web applications. It provides robust core functionalities such as memory-safe virtualization for high-resolution images, responsive double-page spreads, and a pluggable data pipeline for dynamic processing (e.g., WASM decryption).
+A highly extensible, headless-UI inspired React comic viewer. It provides memory-safe virtualization of high-resolution pages, responsive single and double-page spreads, RTL and LTR reading directions, and a plugin API for custom data pipelines, while leaving the UI to you.
+
+### [epub-web](https://github.com/publira/epub-web)
+
+A web application that builds fixed-layout EPUBs from a set of images and extracts the images back out of an existing EPUB. Go on the backend, React and TypeScript on the frontend, and a container image ready to run.
+
+## Around the projects
+
+- **[website](https://github.com/publira/website)** — the source of <https://www.publira.dev/>, built with Next.js.
+- **[base-images](https://github.com/publira/base-images)** — the shared Dev Container images published to `ghcr.io/publira/base-images`.
+- **[.github](https://github.com/publira/.github)** — the community health files, templates, and security policy shared across the organization, including this page.
 
 ## Our Vision
 
-We are currently building a **next-generation digital publishing platform** powered by these open-source technologies. As our internal platform evolves, we remain committed to giving back to the community by continuing to open-source the core parsers, viewer engines, and infrastructure components that make it all possible.
+We are building a next-generation digital publishing platform in the open. The platform is open source alongside the parsers, viewer engines, and infrastructure components that make it work, so that a publisher can adopt it, run it, and adapt it without depending on us.
