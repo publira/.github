@@ -90,6 +90,19 @@
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // golang-migrate is consumed as both a Go module and a released CLI
+    // binary, so the library and the pinned CLI version reach Renovate through
+    // different datasources and would otherwise be raised as two Pull Requests
+    // for the same upstream release.
+    {
+      groupName: "golang-migrate",
+      matchDatasources: ["github-releases", "go"],
+      matchPackageNames: [
+        "github.com/golang-migrate/migrate/**",
+        "golang-migrate/migrate",
+      ],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
     // pubspec.lock must be resolved with the project's Flutter SDK.
     {
       description: "Disable pub lockFileMaintenance so Renovate does not rewrite SDK-pinned transitives (which flutter pub get then reverts).",
