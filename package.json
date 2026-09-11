@@ -10,8 +10,8 @@
     "fix": "ultracite fix"
   },
   "devDependencies": {
-    "oxfmt": "0.66.0",
-    "oxlint": "1.81.0",
+    "oxfmt": "0.67.0",
+    "oxlint": "1.82.0",
     "ultracite": "7.11.0"
   },
   "packageManager": "npm@12.0.2"
