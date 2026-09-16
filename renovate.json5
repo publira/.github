@@ -76,6 +76,13 @@
       matchPackageNames: ["@bufbuild/**"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // sugar-high (https://github.com/huozhi/sugar-high)
+    {
+      groupName: "sugar-high monorepo",
+      matchDatasources: ["npm"],
+      matchPackageNames: ["sugar-high", "@sugar-high/**"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
     // oxc: monorepo:oxlint only covers oxlint / eslint-plugin-oxlint.
     // oxfmt is also from oxc-project/oxc, so group them as oxc monorepo.
     {
