@@ -110,6 +110,21 @@
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // Base images are published under a new calendar tag and can also be rebuilt
+    // under a tag that already exists. The docker datasource puts a tag update
+    // and a digest update of the current tag on different branches, so both
+    // open a pull request for the same line and the digest one is autoclosed
+    // once the tag update is merged. Keying the branch by image alone puts both
+    // on one branch, where Renovate keeps the update listed first (the tag
+    // update) and drops the other as an upgrade collision; a rebuild with no
+    // newer tag still arrives as a digest update. That ordering is Renovate's
+    // implementation rather than documented behavior. `groupName` is not used
+    // because it would put every image in the namespace on one branch.
+    {
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/publira/base-images/**"],
+      branchTopic: "{{{depNameSanitized}}}",
+    },
     // pubspec.lock must be resolved with the project's Flutter SDK.
     {
       description: "Disable pub lockFileMaintenance so Renovate does not rewrite SDK-pinned transitives (which flutter pub get then reverts).",
