@@ -132,5 +132,27 @@
       matchUpdateTypes: ["lockFileMaintenance"],
       enabled: false,
     },
+    // renovate and lucide-react publish minor releases several times a week,
+    // so their minor bumps would otherwise dominate the pull request queue.
+    // Only minor updates wait for the weekly window; major and patch updates
+    // keep their usual cadence.
+    //
+    // Without separateMinorPatch, Renovate offers only the newest release within
+    // the current major, so a patch for the current minor would be folded into
+    // a newer pending minor and wait for the window along with it. The option
+    // has to sit in a rule without matchUpdateTypes, because it decides how
+    // updates are split before their update type is known.
+    {
+      matchDatasources: ["npm"],
+      matchPackageNames: ["lucide-react", "renovate"],
+      separateMinorPatch: true,
+    },
+    {
+      description: "Raise minor updates of renovate and lucide-react once a week (Monday before 04:00).",
+      matchDatasources: ["npm"],
+      matchPackageNames: ["lucide-react", "renovate"],
+      matchUpdateTypes: ["minor"],
+      schedule: ["* 0-3 * * 1"],
+    },
   ],
 }
