@@ -132,6 +132,17 @@
       matchUpdateTypes: ["lockFileMaintenance"],
       enabled: false,
     },
+    // config:best-practices holds npm updates until a release is three days
+    // old, in case a compromised or broken version is unpublished in that
+    // time. Packages published by the Publira Organization come from the same
+    // maintainers as the repositories that use them, so the wait only delays
+    // the rollout of a change that was made for those repositories.
+    {
+      description: "Raise updates of the Publira Organization's own npm packages as soon as they are published.",
+      matchDatasources: ["npm"],
+      matchPackageNames: ["@publira/**"],
+      minimumReleaseAge: null,
+    },
     // renovate and lucide-react publish minor releases several times a week,
     // so their minor bumps would otherwise dominate the pull request queue.
     // Only minor updates wait for the weekly window; major and patch updates
