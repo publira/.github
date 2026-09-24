@@ -83,6 +83,14 @@
       matchPackageNames: ["sugar-high", "@sugar-high/**"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // FlutterFire: each release pins firebase-ios-sdk exactly. Matched by source
+    // URL because firebase_ui_* comes from firebase/FirebaseUI-Flutter.
+    {
+      groupName: "flutterfire monorepo",
+      matchDatasources: ["dart"],
+      matchSourceUrls: ["https://github.com/firebase/flutterfire"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
     // oxc: monorepo:oxlint only covers oxlint / eslint-plugin-oxlint.
     // oxfmt is also from oxc-project/oxc, so group them as oxc monorepo.
     {
