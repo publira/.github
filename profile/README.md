@@ -24,6 +24,10 @@ A highly extensible, headless-UI inspired React comic viewer. It provides memory
 
 A web application that builds fixed-layout EPUBs from a set of images and extracts the images back out of an existing EPUB. Go on the backend, React and TypeScript on the frontend, and a container image ready to run.
 
+### [next-cache-handlers](https://github.com/publira/next-cache-handlers)
+
+A Redis-backed Next.js `cacheHandler` and `cacheHandlers` for self-hosted, multi-instance deployments. Every instance shares one server cache, covering `"use cache"`, ISR, and tag revalidation, and it works with Valkey as well as Redis. Published on npm as [`@publira/next-cache-handlers`](https://www.npmjs.com/package/@publira/next-cache-handlers).
+
 ## Our Vision
 
 We are building a next-generation digital publishing platform in the open. The platform is open source alongside the parsers, viewer engines, and infrastructure components that make it work, so that a publisher can adopt it, run it, and adapt it without depending on us.
