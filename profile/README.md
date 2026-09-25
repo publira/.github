@@ -16,7 +16,7 @@ Independently useful projects that grew out of the platform.
 
 A Go library for decoding, encoding, and validating EPUB 3 files. It is built around `io.ReaderAt` and `io.Writer` rather than a filesystem, opens assets on demand to keep memory use low, and validates against EBPAJ- and KADOKAWA-style conventions.
 
-### [comic-viewer](https://github.com/publira/comic-viewer)
+### [@publira/comic-viewer](https://github.com/publira/comic-viewer)
 
 A highly extensible, headless-UI inspired React comic viewer. It provides memory-safe virtualization of high-resolution pages, responsive single and double-page spreads, RTL and LTR reading directions, and a plugin API for custom data pipelines, while leaving the UI to you.
 
