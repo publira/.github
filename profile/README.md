@@ -20,13 +20,13 @@ A Go library for decoding, encoding, and validating EPUB 3 files. It is built ar
 
 A highly extensible, headless-UI inspired React comic viewer. It provides memory-safe virtualization of high-resolution pages, responsive single and double-page spreads, RTL and LTR reading directions, and a plugin API for custom data pipelines, while leaving the UI to you.
 
-### [epub-web](https://github.com/publira/epub-web)
-
-A web application that builds fixed-layout EPUBs from a set of images and extracts the images back out of an existing EPUB. Go on the backend, React and TypeScript on the frontend, and a container image ready to run.
-
 ### [@publira/next-cache-handlers](https://github.com/publira/next-cache-handlers)
 
 A Redis-backed Next.js `cacheHandler` and `cacheHandlers` for self-hosted, multi-instance deployments. Every instance shares one server cache, covering `"use cache"`, ISR, and tag revalidation, and it works with Valkey as well as Redis.
+
+### [epub-web](https://github.com/publira/epub-web)
+
+A web application that builds fixed-layout EPUBs from a set of images and extracts the images back out of an existing EPUB. Go on the backend, React and TypeScript on the frontend, and a container image ready to run.
 
 ## Our Vision
 
