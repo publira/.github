@@ -15,7 +15,7 @@
       description: "Update annotated version variables in shell scripts",
       managerFilePatterns: ["/(^|/)[^/]+\\.sh$/"],
       matchStrings: [
-        "#\\s*renovate:\\s*datasource=(?<datasource>[a-z-]+)\\s+depName=(?<depName>\\S+?)(?:\\s+packageName=(?<packageName>\\S+?))?(?:\\s+versioning=(?<versioning>\\S+?))?(?:\\s+extractVersion=(?<extractVersion>\\S+?))?\\s+(?:readonly\\s+)?(?:export\\s+)?[A-Za-z_][A-Za-z0-9_]*_VERSION=[\\\"']?(?<currentValue>[^\\\"'\\s]+)[\\\"']?",
+        "#\\s*renovate:\\s*datasource=(?<datasource>[a-z.-]+)\\s+depName=(?<depName>\\S+?)(?:\\s+packageName=(?<packageName>\\S+?))?(?:\\s+versioning=(?<versioning>\\S+?))?(?:\\s+extractVersion=(?<extractVersion>\\S+?))?\\s+(?:readonly\\s+)?(?:export\\s+)?[A-Za-z_][A-Za-z0-9_]*_VERSION=[\\\"']?(?<currentValue>[^\\\"'\\s]+)[\\\"']?",
       ],
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
     },
@@ -32,7 +32,7 @@
         "/(^|/)\\.devcontainer\\.json$/",
       ],
       matchStrings: [
-        '//\\s*renovate:\\s*datasource=(?<datasource>[a-z-]+)\\s+depName=(?<depName>\\S+?)(?:\\s+packageName=(?<packageName>\\S+?))?(?:\\s+versioning=(?<versioning>\\S+?))?(?:\\s+extractVersion=(?<extractVersion>\\S+?))?\\s+"[A-Za-z0-9_]+":\\s*"(?<currentValue>[^"]+)"',
+        '//\\s*renovate:\\s*datasource=(?<datasource>[a-z.-]+)\\s+depName=(?<depName>\\S+?)(?:\\s+packageName=(?<packageName>\\S+?))?(?:\\s+versioning=(?<versioning>\\S+?))?(?:\\s+extractVersion=(?<extractVersion>\\S+?))?\\s+"[A-Za-z0-9_]+":\\s*"(?<currentValue>[^"]+)"',
       ],
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
     },
