@@ -21,6 +21,23 @@
     },
     {
       customType: "regex",
+      // The devcontainer manager updates a Feature's reference but not the tool
+      // versions passed to it as options (for example `version` and `tflint` of
+      // the Terraform Feature), so such an option is annotated with a
+      // `// renovate:` comment on the line above it, in the same format as the
+      // shell script annotations.
+      description: "Update annotated tool versions passed as Dev Container Feature options",
+      managerFilePatterns: [
+        "/(^|/)\\.devcontainer(/[^/]+)?/devcontainer\\.json$/",
+        "/(^|/)\\.devcontainer\\.json$/",
+      ],
+      matchStrings: [
+        '//\\s*renovate:\\s*datasource=(?<datasource>[a-z-]+)\\s+depName=(?<depName>\\S+?)(?:\\s+packageName=(?<packageName>\\S+?))?(?:\\s+versioning=(?<versioning>\\S+?))?(?:\\s+extractVersion=(?<extractVersion>\\S+?))?\\s+"[A-Za-z0-9_]+":\\s*"(?<currentValue>[^"]+)"',
+      ],
+      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
+    },
+    {
+      customType: "regex",
       // The npm manager does not read `devEngines` yet
       // (renovatebot/renovate#38067), so a repository that pins Node.js there
       // — where `pnpm/setup` reads it — would stop receiving updates for it.
