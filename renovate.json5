@@ -57,14 +57,24 @@
       depNameTemplate: "node",
     },
   ],
-  // One hidden comment per update at the top of each pull request body, which
-  // the maintenance bot in publira/agents reads to tell whether a maintainer
-  // already approved and merged the same update in another repository. The
-  // payload is the update's JSON in Base64, so no markdown or emoji processing
-  // changes it. The bot reads only the comments that open the body, ahead of
-  // anything copied from release notes, and refuses a field it does not know,
-  // so change the fields here and in the bot together. A repository that sets
-  // its own prHeader replaces this one and gets no automatic approvals.
+  // One hidden comment per update at the top of each pull request body. The
+  // maintenance bot in publira/agents approves a Renovate pull request when a
+  // maintainer already approved and merged the same update in another
+  // repository, and "the same" has to mean the same manager, datasource,
+  // dependency, from- and to-version, digests, and update type. Nothing
+  // Renovate writes by default carries all of them: the title has no
+  // from-version, the branch name no version at all, the table never names the
+  // manager and shows the update type or full digests only in some pull
+  // requests, and the existing renovate-debug comment holds only Renovate's
+  // version, the target branch, and labels. So Renovate writes them here, from
+  // the same values it used for the update.
+  //
+  // The payload is the update's JSON in Base64, so no markdown or emoji
+  // processing changes it. The bot reads only the comments that open the body,
+  // ahead of anything copied from release notes, and refuses a field it does
+  // not know, so change the fields here and in the bot together. A repository
+  // that sets its own prHeader replaces this one and gets no automatic
+  // approvals.
   prHeader: "{{#each upgrades}}<!-- publira-renovate-update {{{encodeBase64 (toJSON (toObject 'manager' manager 'datasource' datasource 'depName' depName 'packageName' packageName 'currentVersion' currentVersion 'newVersion' newVersion 'currentDigest' currentDigest 'newDigest' newDigest 'updateType' updateType))}}} -->\n{{/each}}",
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
   // Flutter-related ignores (shared by consumer repos; do not re-declare locally):
