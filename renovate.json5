@@ -57,6 +57,15 @@
       depNameTemplate: "node",
     },
   ],
+  // One hidden comment per update at the top of each pull request body, which
+  // the maintenance bot in publira/agents reads to tell whether a maintainer
+  // already approved and merged the same update in another repository. The
+  // payload is the update's JSON in Base64, so no markdown or emoji processing
+  // changes it. The bot reads only the comments that open the body, ahead of
+  // anything copied from release notes, and refuses a field it does not know,
+  // so change the fields here and in the bot together. A repository that sets
+  // its own prHeader replaces this one and gets no automatic approvals.
+  prHeader: "{{#each upgrades}}<!-- publira-renovate-update {{{encodeBase64 (toJSON (toObject 'manager' manager 'datasource' datasource 'depName' depName 'packageName' packageName 'currentVersion' currentVersion 'newVersion' newVersion 'currentDigest' currentDigest 'newDigest' newDigest 'updateType' updateType))}}} -->\n{{/each}}",
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
   // Flutter-related ignores (shared by consumer repos; do not re-declare locally):
   // - SDK exact pins: advance only by upgrading the Flutter SDK.
