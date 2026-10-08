@@ -160,6 +160,22 @@
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // The image has to move with the npm packages, but reports no source URL
+    // for group:monorepos to match.
+    {
+      groupName: "playwright monorepo",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["mcr.microsoft.com/playwright"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // The image has no release timestamp to wait on, and a group drops its
+    // pending upgrades, so the npm half must not wait either.
+    {
+      description: "Raise updates of the npm packages released from microsoft/playwright as soon as they are published.",
+      matchDatasources: ["npm"],
+      matchSourceUrls: ["https://github.com/microsoft/playwright"],
+      minimumReleaseAge: null,
+    },
     // Base images are published under a new calendar tag and can also be rebuilt
     // under a tag that already exists. The docker datasource puts a tag update
     // and a digest update of the current tag on different branches, so both
