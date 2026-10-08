@@ -160,6 +160,28 @@
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // A Playwright client connects only to a server of its own release, and a
+    // server of one release cannot find the browsers that the image of another
+    // ships, so the image and the npm packages have to move together.
+    // group:monorepos groups the npm packages by source URL, which the image
+    // does not report, so it is added to the same group by name.
+    {
+      groupName: "playwright monorepo",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["mcr.microsoft.com/playwright"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // The image cannot share the npm packages' three-day wait: the docker
+    // datasource has release timestamps only on Docker Hub, so the image would
+    // stay pending for good. A group whose upgrades wait for different lengths
+    // drops the pending ones from its branch, which would raise one half alone,
+    // so the npm half does not wait either.
+    {
+      description: "Raise updates of the npm packages released from microsoft/playwright as soon as they are published.",
+      matchDatasources: ["npm"],
+      matchSourceUrls: ["https://github.com/microsoft/playwright"],
+      minimumReleaseAge: null,
+    },
     // Base images are published under a new calendar tag and can also be rebuilt
     // under a tag that already exists. The docker datasource puts a tag update
     // and a digest update of the current tag on different branches, so both
