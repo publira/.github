@@ -76,6 +76,18 @@
   // that sets its own prHeader replaces this one and gets no automatic
   // approvals.
   prHeader: "{{#each upgrades}}<!-- publira-renovate-update {{{encodeBase64 (toJSON (toObject 'manager' manager 'datasource' datasource 'depName' depName 'packageName' packageName 'currentVersion' currentVersion 'newVersion' newVersion 'currentDigest' currentDigest 'newDigest' newDigest 'updateType' updateType))}}} -->\n{{/each}}",
+  // Renovate stops rebasing or updating a branch once it holds a commit by an
+  // author other than its own, so a newer release, a conflict with the base
+  // branch, or the rebase/retry checkbox would no longer reach the branch. The
+  // maintenance bot in publira/agents commits to Renovate's branches through
+  // its GitHub App (for example to regenerate a devcontainer-lock.json that
+  // the devcontainer manager leaves untouched), so its commits are ignored
+  // here. Renovate may discard such a commit whenever it rewrites the branch,
+  // because the bot adds it again for the new head. Commits by anyone else,
+  // a maintainer included, still mark the branch as modified.
+  gitIgnoredAuthors: [
+    "337675973+publira-maintenance-bot[bot]@users.noreply.github.com",
+  ],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
   // Flutter-related ignores (shared by consumer repos; do not re-declare locally):
   // - SDK exact pins: advance only by upgrading the Flutter SDK.
