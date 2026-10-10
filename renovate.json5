@@ -133,14 +133,16 @@
       matchSourceUrls: ["https://github.com/firebase/flutterfire"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
-    // ultracite's presets configure oxc and the plugins oxlint loads, so a
-    // change in any of them fails `ultracite check` alike.
+    // oxc, ultracite, and the configs and plugins oxlint loads all change what
+    // `ultracite check` accepts.
     {
       groupName: "lint toolchain",
       matchDatasources: ["npm"],
       matchPackageNames: [
         "@*/eslint-plugin",
         "@*/eslint-plugin-*",
+        "@*/oxlint-config",
+        "@*/oxlint-config-*",
         "@*/oxlint-plugin",
         "@*/oxlint-plugin-*",
         "@oxfmt/**",
@@ -148,6 +150,7 @@
         "eslint-plugin-*",
         "oxfmt",
         "oxlint",
+        "oxlint-config-*",
         "oxlint-plugin-*",
         "ultracite",
       ],
