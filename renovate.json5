@@ -133,26 +133,23 @@
       matchSourceUrls: ["https://github.com/firebase/flutterfire"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
-    // oxc, ultracite, and the plugins oxlint loads each change what
-    // `ultracite check` accepts, and ultracite's presets configure the
-    // plugins' rules, so they move as one lint toolchain. This rule's
-    // groupName also takes a plugin away from its group:monorepos siblings.
+    // ultracite's presets configure oxc and the plugins oxlint loads, so a
+    // change in any of them fails `ultracite check` alike.
     {
       groupName: "lint toolchain",
       matchDatasources: ["npm"],
       matchPackageNames: [
-        "oxfmt",
-        "oxlint",
-        "eslint-plugin-oxlint",
-        "@oxfmt/**",
-        "@oxlint/**",
-        "ultracite",
-        "eslint-plugin-*",
         "@*/eslint-plugin",
         "@*/eslint-plugin-*",
-        "oxlint-plugin-*",
         "@*/oxlint-plugin",
         "@*/oxlint-plugin-*",
+        "@oxfmt/**",
+        "@oxlint/**",
+        "eslint-plugin-*",
+        "oxfmt",
+        "oxlint",
+        "oxlint-plugin-*",
+        "ultracite",
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
