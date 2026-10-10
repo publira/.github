@@ -1,6 +1,6 @@
 {
   "name": "publira/.github",
-  "image": "ghcr.io/publira/base-images/publira-dev:2026.10.09@sha256:533a20bd2fdf22d3e49a863ab937ec899fe13729357d0fdb1be3c99952fb4ee7",
+  "image": "ghcr.io/publira/base-images/publira-dev:2026.10.10@sha256:591a49e8ce4626509cb9707dde97ece4024081dee2210edc407b2a0358d76cc6",
   "features": {
     "ghcr.io/anthropics/devcontainer-features/claude-code:1.0.5": {}
   },
