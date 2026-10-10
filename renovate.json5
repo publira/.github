@@ -76,10 +76,12 @@
   // that sets its own prHeader replaces this one and gets no automatic
   // approvals.
   prHeader: "{{#each upgrades}}<!-- publira-renovate-update {{{encodeBase64 (toJSON (toObject 'manager' manager 'datasource' datasource 'depName' depName 'packageName' packageName 'currentVersion' currentVersion 'newVersion' newVersion 'currentDigest' currentDigest 'newDigest' newDigest 'updateType' updateType))}}} -->\n{{/each}}",
-  // The maintenance bot in publira/agents commits to Renovate's branches and
-  // commits again after Renovate rewrites them, so its commits must not stop
-  // Renovate from updating the branch.
+  // Chachamaru in publira/agents commits to Renovate's branches and commits
+  // again after Renovate rewrites them, so its commits must not stop Renovate
+  // from updating the branch. The old email stays until the branches holding
+  // commits made before the App was renamed are gone.
   gitIgnoredAuthors: [
+    "337675973+chachamaru-bot[bot]@users.noreply.github.com",
     "337675973+publira-maintenance-bot[bot]@users.noreply.github.com",
   ],
   postUpdateOptions: ["gomodTidy", "npmDedupe", "pnpmDedupe"],
