@@ -156,27 +156,6 @@
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
-    // Otherwise a major update goes to `renovate/major-lint-toolchain`, apart
-    // from the rest of the toolchain. Like separateMinorPatch below, the option
-    // cannot sit in a rule with matchUpdateTypes.
-    {
-      matchDatasources: ["npm"],
-      matchPackageNames: [
-        "oxfmt",
-        "oxlint",
-        "eslint-plugin-oxlint",
-        "@oxfmt/**",
-        "@oxlint/**",
-        "ultracite",
-        "eslint-plugin-*",
-        "@*/eslint-plugin",
-        "@*/eslint-plugin-*",
-        "oxlint-plugin-*",
-        "@*/oxlint-plugin",
-        "@*/oxlint-plugin-*",
-      ],
-      separateMajorMinor: false,
-    },
     // golang-migrate is consumed as both a Go module and a released CLI
     // binary, so the library and the pinned CLI version reach Renovate through
     // different datasources and would otherwise be raised as two Pull Requests
