@@ -133,17 +133,26 @@
       matchSourceUrls: ["https://github.com/firebase/flutterfire"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
-    // oxc: monorepo:oxlint only covers oxlint / eslint-plugin-oxlint.
-    // oxfmt is also from oxc-project/oxc, so group them as oxc monorepo.
+    // oxc, ultracite, and the configs and plugins oxlint loads all change what
+    // `ultracite check` accepts.
     {
-      groupName: "oxc monorepo",
+      groupName: "lint toolchain",
       matchDatasources: ["npm"],
       matchPackageNames: [
-        "oxfmt",
-        "oxlint",
-        "eslint-plugin-oxlint",
+        "@*/eslint-plugin",
+        "@*/eslint-plugin-*",
+        "@*/oxlint-config",
+        "@*/oxlint-config-*",
+        "@*/oxlint-plugin",
+        "@*/oxlint-plugin-*",
         "@oxfmt/**",
         "@oxlint/**",
+        "eslint-plugin-*",
+        "oxfmt",
+        "oxlint",
+        "oxlint-config-*",
+        "oxlint-plugin-*",
+        "ultracite",
       ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
