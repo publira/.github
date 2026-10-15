@@ -56,7 +56,34 @@
       datasourceTemplate: "node-version",
       depNameTemplate: "node",
     },
+    {
+      customType: "regex",
+      // buf has no Renovate manager. A remote plugin is looked up on the Buf
+      // Schema Registry itself rather than on the Go module or npm package it
+      // is built from: the registry publishes a plugin hours to days after
+      // that release, and `buf generate` rejects a version it has not
+      // published yet.
+      description: "Update Buf Schema Registry remote plugin versions in buf.gen.yaml",
+      managerFilePatterns: ["/(^|/)buf\\.gen\\.yaml$/"],
+      matchStrings: [
+        "remote:\\s*(?<depName>buf\\.build/[^/\\s]+/[^:\\s]+):(?<currentValue>v[^\\s#]+)",
+      ],
+      datasourceTemplate: "custom.buf-plugin",
+    },
   ],
+  customDatasources: {
+    // GetLatestCuratedPlugin returns the newest version the registry serves
+    // for a plugin, and only that one, which is all a pin needs to be raised
+    // to. It is sent as a Connect GET request because a custom datasource can
+    // only fetch a URL. `packageName` is the plugin as buf.gen.yaml names it,
+    // `buf.build/<owner>/<name>`.
+    "buf-plugin": {
+      defaultRegistryUrlTemplate: "https://buf.build/buf.alpha.registry.v1alpha1.PluginCurationService/GetLatestCuratedPlugin?encoding=json&message=%7B%22owner%22%3A%22{{{replace '^buf[.]build/([^/]+)/.*$' '$1' packageName}}}%22%2C%22name%22%3A%22{{{replace '^buf[.]build/[^/]+/' '' packageName}}}%22%7D",
+      transformTemplates: [
+        '{"releases": [{"version": plugin.version, "releaseTimestamp": plugin.createTime}], "sourceUrl": plugin.sourceUrl}',
+      ],
+    },
+  },
   // One hidden comment per update at the top of each pull request body. The
   // maintenance bot in publira/agents approves a Renovate pull request when a
   // maintainer already approved and merged the same update in another
@@ -93,27 +120,41 @@
     "vector_math",
   ],
   // Group monorepo-style deps that Renovate's monorepo presets do not cover
-  // (complements group:monorepos from config:best-practices).
+  // (complements group:monorepos from config:best-practices). A Buf Schema
+  // Registry plugin joins the group of the runtime library its generated code
+  // is compiled against: a release the registry has already published arrives
+  // in one pull request with the library, and a plugin published later
+  // follows in a pull request of its own.
   packageRules: [
     // connect-es (https://github.com/connectrpc/connect-es)
     {
       groupName: "connect-es monorepo",
-      matchDatasources: ["npm"],
-      matchPackageNames: ["@connectrpc/**"],
+      matchDatasources: ["custom.buf-plugin", "npm"],
+      matchPackageNames: ["@connectrpc/**", "buf.build/connectrpc/es"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
     // connect-go (https://github.com/connectrpc/connect-go)
     {
       groupName: "connect-go monorepo",
-      matchDatasources: ["go"],
-      matchPackageNames: ["connectrpc.com/**"],
+      matchDatasources: ["custom.buf-plugin", "go"],
+      matchPackageNames: ["buf.build/connectrpc/go", "connectrpc.com/**"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
     // protobuf-es (https://github.com/bufbuild/protobuf-es)
     {
       groupName: "protobuf-es monorepo",
-      matchDatasources: ["npm"],
-      matchPackageNames: ["@bufbuild/**"],
+      matchDatasources: ["custom.buf-plugin", "npm"],
+      matchPackageNames: ["@bufbuild/**", "buf.build/bufbuild/es"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
+    // protobuf-go (https://github.com/protocolbuffers/protobuf-go)
+    {
+      groupName: "protobuf-go",
+      matchDatasources: ["custom.buf-plugin", "go"],
+      matchPackageNames: [
+        "buf.build/protocolbuffers/go",
+        "google.golang.org/protobuf",
+      ],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
     // sugar-high (https://github.com/huozhi/sugar-high)
@@ -223,6 +264,18 @@
       matchDatasources: ["npm"],
       matchPackageNames: ["@publira/**"],
       minimumReleaseAge: null,
+    },
+    // Generated code needs a runtime library at least as new as the plugin
+    // that generated it. A plugin the registry builds from an npm package
+    // would otherwise be raised ahead of that package, which still waits out
+    // the three days config:best-practices holds npm updates for. The registry
+    // publishes a plugin after the package it is built from, so the same wait
+    // counted from the plugin's own release keeps the plugin behind.
+    {
+      description: "Hold updates of Buf Schema Registry plugins built from npm packages as long as npm updates.",
+      matchDatasources: ["custom.buf-plugin"],
+      matchPackageNames: ["buf.build/bufbuild/es", "buf.build/connectrpc/es"],
+      minimumReleaseAge: "3 days",
     },
     // renovate and lucide-react publish minor releases several times a week,
     // so their minor bumps would otherwise dominate the pull request queue.
