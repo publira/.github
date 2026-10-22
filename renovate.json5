@@ -299,5 +299,22 @@
       matchUpdateTypes: ["minor"],
       schedule: ["* 0-3 * * 1"],
     },
+    // config:best-practices commits an update to `dependencies` as `fix(deps)`
+    // whichever package.json declares it, and a branch takes the highest type
+    // among its updates. In a repository that releases with release-please, an
+    // update reaching a demo or example app alongside the published package
+    // therefore cut a release although nothing published changed. A repository
+    // whose own private app has another name adds a rule of its own.
+    {
+      description: "Commit updates of the end-to-end tests and the demo and example apps as chore, since they are never published.",
+      matchFileNames: [
+        "apps/demo/**",
+        "apps/demo-*/**",
+        "apps/example/**",
+        "apps/example-*/**",
+        "e2e/**",
+      ],
+      semanticCommitType: "chore",
+    },
   ],
 }
