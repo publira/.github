@@ -140,6 +140,15 @@
       matchPackageNames: ["buf.build/connectrpc/go", "connectrpc.com/**"],
       matchUpdateTypes: ["digest", "patch", "minor", "major"],
     },
+    // protobuf.dart (https://github.com/google/protobuf.dart). Matched by name
+    // because the plugin (v25.x) and runtime (6.x) version lines differ, and
+    // the repository's other pub packages must stay out of the group.
+    {
+      groupName: "protobuf.dart",
+      matchDatasources: ["custom.buf-plugin", "dart"],
+      matchPackageNames: ["buf.build/protocolbuffers/dart", "protobuf"],
+      matchUpdateTypes: ["digest", "patch", "minor", "major"],
+    },
     // protobuf-es (https://github.com/bufbuild/protobuf-es)
     {
       groupName: "protobuf-es monorepo",
