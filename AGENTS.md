@@ -27,5 +27,6 @@ Answer the user in the language of their own prose. Quoted logs, code, or UI str
 ## Checks
 
 - `pnpm check` runs the formatter and linter (oxfmt and oxlint through ultracite); `pnpm fix` applies the fixes. CI runs `pnpm check` on every pull request.
+- `pnpm install` installs the lefthook pre-commit hook in `lefthook.yml`, which formats the staged JavaScript, TypeScript, CSS, JSON, Markdown, and YAML files with oxfmt and stages the result. It does not lint, so run `pnpm check` before committing. CI stays the source of truth; the hook can be bypassed with `--no-verify`.
 - After changing `renovate.json5`, validate it with `pnpm --package=renovate dlx renovate-config-validator --strict renovate.json5`.
 - Dependency updates come from Renovate. This repository's own `.github/renovate.json5` only extends the shared preset; change shared behavior in `renovate.json5` at the root.

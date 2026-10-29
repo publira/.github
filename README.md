@@ -13,6 +13,18 @@ By maintaining these files here, we ensure a consistent and welcoming experience
 - **Community Guidelines:** Centralized documents such as `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` to establish clear expectations and a safe environment for everyone.
 - **[Security Policy](SECURITY.md):** How to report a vulnerability privately in any Publira repository, and what happens after a report arrives.
 
+## Development
+
+Open the repository in a [Dev Container](https://containers.dev/) (VS Code or GitHub Codespaces), or use Node.js and pnpm at the versions pinned in `package.json`.
+
+```sh
+pnpm install
+pnpm check # format and lint
+pnpm fix   # apply fixes
+```
+
+`pnpm install` also installs a [lefthook](https://github.com/evilmartians/lefthook) pre-commit hook that formats the staged JavaScript, TypeScript, CSS, JSON, Markdown, and YAML files with oxfmt. It does not lint them; `pnpm check` and CI do.
+
 ## Explore Our Ecosystem
 
 To learn more about the tools we build for digital publishing, e-books, and webcomics, please visit our [Organization Profile](https://github.com/publira).
