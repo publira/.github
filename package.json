@@ -14,5 +14,12 @@
     "oxlint": "1.89.0",
     "ultracite": "8.1.0"
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.13.0",
+      "onFail": "warn"
+    }
+  },
   "packageManager": "npm@12.2.1"
 }
