@@ -12,6 +12,13 @@ By maintaining these files here, we ensure a consistent and welcoming experience
 - **Issue & Pull Request Templates:** Default templates (`ISSUE_TEMPLATE`, `PULL_REQUEST_TEMPLATE.md`) to help contributors provide structured and actionable information when reporting bugs, requesting features, or submitting code.
 - **Community Guidelines:** Centralized documents such as `CODE_OF_CONDUCT.md` and `CONTRIBUTING.md` to establish clear expectations and a safe environment for everyone.
 - **[Security Policy](SECURITY.md):** How to report a vulnerability privately in any Publira repository, and what happens after a report arrives.
+- **[Agent Skills](skills/):** Shared skills that any repository can install with the [`skills` CLI](https://github.com/vercel-labs/skills). They name no organization or repository, so they also work outside Publira. [`create-pr`](skills/create-pr/SKILL.md) opens pull requests the way every Publira repository requires: it reads the repository's `AGENTS.md` policy, stages by explicit path, commits with English Conventional Commits and the `Assisted-by` trailer, verifies before pushing, rebases onto the default branch, and fills the applicable pull request template. Install it in a repository with:
+
+  ```sh
+  npx skills add https://github.com/publira/.github --skill create-pr
+  ```
+
+  The same command replaces a repository-specific `create-pr` skill, provided that the repository's own rules (labels, extra template sections, stacking, verification order) are stated in its `AGENTS.md`, which the shared skill reads.
 
 ## Development
 
