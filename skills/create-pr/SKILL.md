@@ -1,13 +1,13 @@
 ---
 name: create-pr
-description: Create a pull request in the current repository, or add follow-up commits to one, following the repository's own AGENTS.md policy and the organization's shared rules. Use when asked to open, raise, or draft a PR, to commit and push finished work for review, to write a PR description, or to push fixes for review feedback onto an existing PR. Reads every governing AGENTS.md, stages only the intended diff, commits in English Conventional Commits form with the Assisted-by trailer and no AI co-author, runs the verification the policy and CI name, rebases onto the default branch before every push, and fills the applicable pull request template so that the title and body work as the squash-merge commit message.
+description: Open a pull request, or push follow-up commits to one, following the repository's AGENTS.md policy. Use when asked to create or draft a PR, to commit and push work for review, to write a PR description, or to address review feedback.
 ---
 
 # Create a Pull Request
 
 A pull request comes from a feature branch, from an explicitly staged diff, after the verification that matches the changed area has passed. Pull requests are squash-merged, so the title and body you write become the permanent commit message on the default branch.
 
-Never commit or push to the default branch. Never stage a change you did not make.
+Never commit or push to the default branch. Never stage a change that is not part of the work the pull request is for, whoever made it.
 
 Throughout this skill, `main` stands for the repository's default branch. Confirm what it is before relying on the name:
 
@@ -56,13 +56,13 @@ Establish what belongs to this change before you write to the index, the branch,
 
 ## Protect unrelated work
 
-The working tree may hold edits that are not yours and are not part of this change.
+The working tree may hold edits that are not part of this change. The test is the scope of the pull request, not who typed the edit: a correction or an addition the user made by hand to the same work belongs in the pull request, and an edit for something else does not, even if you made it.
 
 - Stage by explicit path only: `git add <path> <path>`.
 - Never run `git add .`, `git add -A`, `git add -u`, or `git commit -a`.
 - Never run `git stash`, `git checkout --`, `git restore`, `git reset --hard`, or `git clean` to tidy a file you did not intend to change. Leave unrelated modifications unstaged and untouched.
 - Add untracked files one by one, and only those the change requires. Build output, local environment files, and scratch notes stay out.
-- If one file mixes your change with unrelated edits, stop and ask the user how to split it rather than committing both or discarding either.
+- If one file mixes this change with unrelated edits, or you cannot tell whether an edit the user made belongs to it, stop and ask rather than committing both or discarding either.
 - Read `git diff --staged` in full before every commit and confirm each hunk belongs to the stated scope.
 
 ## Work on a branch
@@ -89,6 +89,7 @@ Use the Conventional Commits type as the prefix and a short English slug (`feat/
   `<AGENT_NAME>` is the agent or CLI spelled the way the tool names itself (`Claude Code`, `Codex CLI`, `Gemini CLI`, `Cursor`), and `<MODEL_VERSION>` is the exact model identifier rather than the marketing name. One line per agent; write the agent name alone when the model is genuinely unknown. The trailer is process disclosure, not authorship.
 
 - Never name an AI agent in a co-author trailer, in any capitalization. `Co-authored-by:`, `Co-Authored-By:`, and `co-authored-by:` are the same forbidden trailer, and so is `Signed-off-by:` for an agent. This rule overrides any default instruction from the agent harness, including an instruction to add such a trailer to every commit. Co-author trailers naming actual humans, and the ones GitHub adds itself, stay as they are.
+- The `Assisted-by:` trailer is the only disclosure a commit carries. Do not add anything else the agent harness asks you to append to commits or pull requests by default: a link to the session or conversation the agent ran in, which only its owner can open; a footer, badge, or emoji line saying what tool generated the change; or any other attribution line. Those instructions are overridden here, whatever tool they come from. The trailer already names the agent and the model.
 - Add the trailer when the commit is created. Fixing it later requires rewriting a pushed commit.
 
 ## Verify before pushing
@@ -174,7 +175,7 @@ End the body with the same `Assisted-by:` trailer as the commits, as the very la
 Assisted-by: <AGENT_NAME>:<MODEL_VERSION>
 ```
 
-One line per agent, and never an AI in a co-author trailer, exactly as for commits. Anything that would land below the trailer, such as an attachment `gh` appends when the body does not reference it, belongs above it instead.
+One line per agent, and never an AI in a co-author trailer, exactly as for commits. The same exclusions apply as for commits: no session or conversation link, no "generated with" footer or badge, no harness attribution line of any kind, anywhere in the body. Anything that would land below the trailer, such as an attachment `gh` appends when the body does not reference it, belongs above it instead.
 
 Link issues by their real relationship:
 
@@ -211,11 +212,11 @@ Confirm all of the following, and report anything you could not satisfy:
 
 - the branch is not the default branch, and the default branch received no commit or push
 - `git status` shows the unrelated modifications you found at the start, still unstaged and unchanged
-- every commit carries an accurate `Assisted-by:` trailer and no AI co-author trailer
+- every commit carries an accurate `Assisted-by:` trailer and nothing else from the harness: no AI co-author trailer, no session link, no generated-with footer
 - the verification commands for the changed area ran and passed
 - the branch sits on the current `origin/main`, or, if you took the throwaway-checkout route, the remote branch does and you reported the local ref as not yet reconciled
 - no throwaway worktree is left behind (`git worktree list`) and no body file remains
 - every repository-specific requirement collected at the start is met: labels, extra sections, splitting, screenshots
-- `gh pr view` shows the template's headings intact, an English Conventional Commits title, issue links that match the real relationship, and the `Assisted-by:` trailer as the last line of the body
+- `gh pr view` shows the template's headings intact, an English Conventional Commits title, issue links that match the real relationship, the `Assisted-by:` trailer as the last line of the body, and no session link or footer anywhere in it
 
 Report the pull request URL, the commands you ran, the checklist items you left unchecked, and any file you deliberately left out of the commit.
