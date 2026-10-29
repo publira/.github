@@ -60,11 +60,10 @@
       customType: "regex",
       // distroless publishes no versioned tags: the Node.js major is part of
       // the image name, which the docker datasource never moves. Bound to the
-      // `node` dependency, it moves with the Node.js major update instead. The
-      // digest is dropped, not kept: it names a manifest of the previous image,
-      // and no lookup keyed on the current line can resolve the new image's.
-      // The pull request says so, and Renovate pins the new digest once merged.
-      description: "Move the Node.js major in the distroless runner image name of a Dockerfile with the Node.js major update",
+      // `node` dependency, the major moves with the Node.js major update, and
+      // the digest of the new image comes from the `distroless-nodejs`
+      // datasource below with the release, so one line moves both.
+      description: "Move the Node.js major and the digest of the distroless runner image in a Dockerfile with the Node.js major update",
       managerFilePatterns: [
         "/(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$/",
         "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/",
@@ -72,10 +71,9 @@
       matchStrings: [
         "gcr\\.io/distroless/nodejs(?<currentValue>\\d+)-debian13:nonroot(?:@sha256:[0-9a-f]{64})?",
       ],
-      autoReplaceStringTemplate: "gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot",
-      datasourceTemplate: "node-version",
+      autoReplaceStringTemplate: "gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot@{{{newDigest}}}",
+      datasourceTemplate: "custom.distroless-nodejs",
       depNameTemplate: "node",
-      depTypeTemplate: "distroless",
       versioningTemplate: "node",
     },
     {
@@ -103,6 +101,20 @@
       defaultRegistryUrlTemplate: "https://buf.build/buf.alpha.registry.v1alpha1.PluginCurationService/GetLatestCuratedPlugin?encoding=json&message=%7B%22owner%22%3A%22{{{replace '^buf[.]build/([^/]+)/.*$' '$1' packageName}}}%22%2C%22name%22%3A%22{{{replace '^buf[.]build/[^/]+/' '' packageName}}}%22%7D",
       transformTemplates: [
         '{"releases": [{"version": plugin.version, "releaseTimestamp": plugin.createTime}], "sourceUrl": plugin.sourceUrl}',
+      ],
+    },
+    // The digest of a distroless Node.js image lives in the registry
+    // repository of its major, and a lookup fetches one URL, so the URL names
+    // the next even major's repository and the response is its tag list
+    // (empty, not 404, before the image exists). The release is `<major>.0.0`,
+    // which node versioning rates stable from the major's LTS date like the
+    // other `node` pins, and carries the `nonroot` digest. The current major
+    // is listed without one so the lookup always resolves. Extend the chain
+    // before Node.js 40.
+    "distroless-nodejs": {
+      defaultRegistryUrlTemplate: "https://gcr.io/v2/distroless/nodejs{{{replace '^24$' '26' (replace '^26$' '28' (replace '^28$' '30' (replace '^30$' '32' (replace '^32$' '34' (replace '^34$' '36' (replace '^36$' '38' (replace '^38$' '40' currentValue)))))))}}}-debian13/tags/list",
+      transformTemplates: [
+        '{"releases": $append([{"version": "{{{currentValue}}}.0.0"}], $each(manifest, function($m, $digest) { "nonroot" in $m.tag ? {"version": $replace(name, /^distroless\\/nodejs(\\d+)-debian13$/, "$1") & ".0.0", "digest": $digest, "releaseTimestamp": $fromMillis($number($m.timeUploadedMs))} }))}',
       ],
     },
   },
@@ -270,14 +282,14 @@
       matchPackageNames: ["ghcr.io/publira/base-images/**"],
       branchTopic: "{{{depNameSanitized}}}",
     },
-    // The distroless manager above drops the digest it cannot resolve.
+    // Renovate keeps the digest a release carries only for a dependency it
+    // pins. The line's own digest is not captured: Renovate would then look
+    // for a digest update of the current image, which this datasource cannot
+    // return, and warn on every run.
     {
-      description: "Ask for the digest of the distroless runner image before the Node.js major update is merged.",
-      matchManagers: ["custom.regex"],
-      matchDepTypes: ["distroless"],
-      prBodyNotes: [
-        "**Pin `gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot` by digest before merging.** The Node.js major moved in the image name, and the `@sha256:` digest of the previous image was dropped from the line because it names a manifest of another image. Add the new image's digest, for example from `crane digest gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot`. Merged without it, Renovate pins the digest in a follow-up pull request.",
-      ],
+      description: "Carry the digest of the distroless runner image into the Node.js major update.",
+      matchDatasources: ["custom.distroless-nodejs"],
+      pinDigests: true,
     },
     // pubspec.lock must be resolved with the project's Flutter SDK.
     {
