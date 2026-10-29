@@ -17,10 +17,13 @@ gh repo view --json defaultBranchRef --jq .defaultBranchRef.name
 
 ## Start with repository policy
 
-1. Read every `AGENTS.md` that governs a changed path: the one in its directory and every one above it, up to the repository root. Enumerate them from the change itself rather than from memory, and do what they say, including any further reading or commands they point to.
+1. Read every `AGENTS.md` that governs a changed path: the one in its directory and every one above it, up to the repository root. Enumerate them from the change itself rather than from memory, counting the commits the branch already has and the staged, unstaged, and untracked paths that are still to be committed, and do what they say, including any further reading or commands they point to.
 
    ```bash
-   git diff --name-only origin/main...HEAD | while read -r file; do
+   {
+     git diff --name-only origin/main...HEAD
+     git status --porcelain --untracked-files=all | cut -c4- | sed 's/.* -> //'
+   } | sort -u | while read -r file; do
      dir=$(dirname "$file")
      while :; do
        [ -f "$dir/AGENTS.md" ] && echo "$dir/AGENTS.md"
@@ -30,6 +33,8 @@ gh repo view --json defaultBranchRef --jq .defaultBranchRef.name
    done | sort -u
    ```
 
+   Read the root `AGENTS.md` in any case, and run the enumeration again before committing when the set of changed paths has grown since, because a new directory can bring a policy of its own.
+
    This skill carries the procedure every repository shares. Repository policy carries what is specific to that repository, and it wins: where the two disagree on verification commands or on area-specific steps, follow policy and say so in your report. The rebase and squash-merge rules below come from the organization's repository rulesets, so no `AGENTS.md` relaxes them.
 
 2. Collect the repository-specific requirements the policy adds, so that none is discovered after the pull request is open. The kinds seen across repositories:
@@ -38,7 +43,7 @@ gh repo view --json defaultBranchRef --jq .defaultBranchRef.name
    - **Extra template sections**, such as upgrade notes for operators or release notes copied into a GitHub Release, and the CI job that fails when one is empty.
    - **Commit type semantics**, when a release tool reads the Conventional Commits type to choose the next version. Pick the type for what the change does to consumers, not for how it was written.
    - **Splitting rules**, such as one pull request per layer for a change that spans a backend and a frontend, stacked with the tool the policy names.
-   - **Screenshots** of every screen a UI change touches, attached to the body with `gh pr create --attach` or `gh pr edit --attach`.
+   - **Screenshots** of every screen a UI change touches, referenced from the body where each belongs and uploaded with the `--attach` flag of `gh pr create` and `gh pr edit`. The flag exists from GitHub CLI 2.99.0; check `gh --version` first, and with an older `gh` or a GitHub Enterprise Server host, upload the image by other means the policy or the user names and paste the resulting URL into the body instead.
    - **Verification order**, such as a build that must run before the tests because a generated or embedded artifact depends on it.
 
 3. Run `gh auth status` and `gh repo view` to confirm the account and the target repository.
@@ -191,7 +196,7 @@ gh pr create --title "type(scope): succinct description" --body-file <path>
 rm <path>
 ```
 
-Pass `--draft` when the work is not ready for review, `--base` when the target is not the default branch, `--label` for each label the repository policy makes the author apply, and `--attach` for each screenshot the body references.
+Pass `--draft` when the work is not ready for review, `--base` when the target is not the default branch, `--label` for each label the repository policy makes the author apply, and `--attach <file>` for each screenshot the body references, when the installed `gh` is 2.99.0 or later. Never pass a flag the installed `gh` rejects; fall back as described under **Screenshots** above.
 
 ## Follow up after review
 
