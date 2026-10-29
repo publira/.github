@@ -9,8 +9,6 @@ This is the public `.github` repository of the Publira organization. GitHub read
 - `pull_request_template.md`, the default pull request template for the same repositories.
 - `renovate.json5`, the shared Renovate preset the other repositories extend with `github>publira/.github//renovate.json5`. A rule that applies to every Publira repository belongs here; a rule for one repository belongs in that repository's `.github/renovate.json5`.
 
-The repository also publishes agent skills under `skills/`, installed in other repositories with `npx skills add https://github.com/publira/.github --skill <name>`. A skill's frontmatter holds only the Agent Skills standard fields (`name`, `description`), and its body names no organization, repository, or agent-specific substitution, so it works for every agent and for repositories outside Publira; anything specific to one repository belongs in that repository's `AGENTS.md`, which the skill reads.
-
 The repository is public: nothing in it may carry credentials, tokens, or personal data.
 
 ## Language
