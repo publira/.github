@@ -74,6 +74,9 @@
       autoReplaceStringTemplate: "gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot@{{{newDigest}}}",
       datasourceTemplate: "custom.distroless-nodejs",
       depNameTemplate: "node",
+      // Renovate caches a datasource response by package name, and the
+      // response depends on the current major, so the package is the image.
+      packageNameTemplate: "gcr.io/distroless/nodejs{{{currentValue}}}-debian13",
       versioningTemplate: "node",
     },
     {
