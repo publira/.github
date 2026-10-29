@@ -69,7 +69,7 @@
         "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/",
       ],
       matchStrings: [
-        "gcr\\.io/distroless/nodejs(?<currentValue>\\d+)-debian13:nonroot(?:@sha256:[0-9a-f]{64})?",
+        "gcr\\.io/distroless/nodejs(?<currentValue>\\d+)-debian13:nonroot@sha256:[0-9a-f]{64}",
       ],
       autoReplaceStringTemplate: "gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot@{{{newDigest}}}",
       datasourceTemplate: "custom.distroless-nodejs",
