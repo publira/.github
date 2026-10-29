@@ -105,14 +105,15 @@
     },
     // The digest of a distroless Node.js image lives in the registry
     // repository of its major, and a lookup fetches one URL, so the URL names
-    // the next even major's repository and the response is its tag list
-    // (empty, not 404, before the image exists). The release is `<major>.0.0`,
-    // which node versioning rates stable from the major's LTS date like the
-    // other `node` pins, and carries the `nonroot` digest. The current major
-    // is listed without one so the lookup always resolves. Extend the chain
-    // before Node.js 40.
+    // the next LTS major's repository and the response is its tag list
+    // (empty, not 404, before the image exists). The next LTS major is 26
+    // after 24, then every major, since every release line is promoted to LTS
+    // from Node.js 27 on. The release is `<major>.0.0`, which node versioning
+    // rates stable from the major's LTS date like the other `node` pins, and
+    // carries the `nonroot` digest. The current major is listed without one
+    // so the lookup always resolves. Extend the chain before Node.js 36.
     "distroless-nodejs": {
-      defaultRegistryUrlTemplate: "https://gcr.io/v2/distroless/nodejs{{{replace '^24$' '26' (replace '^26$' '28' (replace '^28$' '30' (replace '^30$' '32' (replace '^32$' '34' (replace '^34$' '36' (replace '^36$' '38' (replace '^38$' '40' currentValue)))))))}}}-debian13/tags/list",
+      defaultRegistryUrlTemplate: "https://gcr.io/v2/distroless/nodejs{{{replace '^24$' '26' (replace '^26$' '27' (replace '^27$' '28' (replace '^28$' '29' (replace '^29$' '30' (replace '^30$' '31' (replace '^31$' '32' (replace '^32$' '33' (replace '^33$' '34' (replace '^34$' '35' (replace '^35$' '36' currentValue))))))))))}}}-debian13/tags/list",
       transformTemplates: [
         '{"releases": $append([{"version": "{{{currentValue}}}.0.0"}], $each(manifest, function($m, $digest) { "nonroot" in $m.tag ? {"version": $replace(name, /^distroless\\/nodejs(\\d+)-debian13$/, "$1") & ".0.0", "digest": $digest, "releaseTimestamp": $fromMillis($number($m.timeUploadedMs))} }))}',
       ],
