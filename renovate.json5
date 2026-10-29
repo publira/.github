@@ -58,6 +58,29 @@
     },
     {
       customType: "regex",
+      // distroless publishes no versioned tags: the Node.js major is part of
+      // the image name, which the docker datasource never moves. Bound to the
+      // `node` dependency, the major moves with the Node.js major update, and
+      // the digest of the new image comes from the `distroless-nodejs`
+      // datasource below with the release, so one line moves both.
+      description: "Move the Node.js major and the digest of the distroless runner image in a Dockerfile with the Node.js major update",
+      managerFilePatterns: [
+        "/(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$/",
+        "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/",
+      ],
+      matchStrings: [
+        "gcr\\.io/distroless/nodejs(?<currentValue>\\d+)-debian13:nonroot@sha256:[0-9a-f]{64}",
+      ],
+      autoReplaceStringTemplate: "gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot@{{{newDigest}}}",
+      datasourceTemplate: "custom.distroless-nodejs",
+      depNameTemplate: "node",
+      // Renovate caches a datasource response by package name, and the
+      // response depends on the current major, so the package is the image.
+      packageNameTemplate: "gcr.io/distroless/nodejs{{{currentValue}}}-debian13",
+      versioningTemplate: "node",
+    },
+    {
+      customType: "regex",
       // buf has no Renovate manager. A remote plugin is looked up on the Buf
       // Schema Registry itself rather than on the Go module or npm package it
       // is built from: the registry publishes a plugin hours to days after
@@ -81,6 +104,21 @@
       defaultRegistryUrlTemplate: "https://buf.build/buf.alpha.registry.v1alpha1.PluginCurationService/GetLatestCuratedPlugin?encoding=json&message=%7B%22owner%22%3A%22{{{replace '^buf[.]build/([^/]+)/.*$' '$1' packageName}}}%22%2C%22name%22%3A%22{{{replace '^buf[.]build/[^/]+/' '' packageName}}}%22%7D",
       transformTemplates: [
         '{"releases": [{"version": plugin.version, "releaseTimestamp": plugin.createTime}], "sourceUrl": plugin.sourceUrl}',
+      ],
+    },
+    // The digest of a distroless Node.js image lives in the registry
+    // repository of its major, and a lookup fetches one URL, so the URL names
+    // the next LTS major's repository and the response is its tag list
+    // (empty, not 404, before the image exists). The next LTS major is 26
+    // after 24, then every major, since every release line is promoted to LTS
+    // from Node.js 27 on. The release is `<major>.0.0`, which node versioning
+    // rates stable from the major's LTS date like the other `node` pins, and
+    // carries the `nonroot` digest. The current major is listed without one
+    // so the lookup always resolves. Extend the chain before Node.js 36.
+    "distroless-nodejs": {
+      defaultRegistryUrlTemplate: "https://gcr.io/v2/distroless/nodejs{{{replace '^24$' '26' (replace '^26$' '27' (replace '^27$' '28' (replace '^28$' '29' (replace '^29$' '30' (replace '^30$' '31' (replace '^31$' '32' (replace '^32$' '33' (replace '^33$' '34' (replace '^34$' '35' (replace '^35$' '36' currentValue))))))))))}}}-debian13/tags/list",
+      transformTemplates: [
+        '{"releases": $append([{"version": "{{{currentValue}}}.0.0"}], $each(manifest, function($m, $digest) { "nonroot" in $m.tag ? {"version": $replace(name, /^distroless\\/nodejs(\\d+)-debian13$/, "$1") & ".0.0", "digest": $digest, "releaseTimestamp": $fromMillis($number($m.timeUploadedMs))} }))}',
       ],
     },
   },
@@ -247,6 +285,15 @@
       matchDatasources: ["docker"],
       matchPackageNames: ["ghcr.io/publira/base-images/**"],
       branchTopic: "{{{depNameSanitized}}}",
+    },
+    // Renovate keeps the digest a release carries only for a dependency it
+    // pins. The line's own digest is not captured: Renovate would then look
+    // for a digest update of the current image, which this datasource cannot
+    // return, and warn on every run.
+    {
+      description: "Carry the digest of the distroless runner image into the Node.js major update.",
+      matchDatasources: ["custom.distroless-nodejs"],
+      pinDigests: true,
     },
     // pubspec.lock must be resolved with the project's Flutter SDK.
     {
