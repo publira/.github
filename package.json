@@ -18,8 +18,8 @@
     "runtime": {
       "name": "node",
       "version": "26.13.0",
-      "onFail": "warn"
+      "onFail": "download"
     }
   },
-  "packageManager": "npm@12.2.1"
+  "packageManager": "pnpm@12.15.0"
 }
