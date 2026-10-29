@@ -58,6 +58,28 @@
     },
     {
       customType: "regex",
+      // distroless publishes no versioned tags: the Node.js major is part of
+      // the image name, which the docker datasource never moves. Bound to the
+      // `node` dependency, it moves with the Node.js major update instead. The
+      // digest is dropped, not kept: it names a manifest of the previous image,
+      // and no lookup keyed on the current line can resolve the new image's.
+      // The pull request says so, and Renovate pins the new digest once merged.
+      description: "Move the Node.js major in the distroless runner image name of a Dockerfile with the Node.js major update",
+      managerFilePatterns: [
+        "/(^|/|\\.)([Dd]ocker|[Cc]ontainer)file$/",
+        "/(^|/)([Dd]ocker|[Cc]ontainer)file[^/]*$/",
+      ],
+      matchStrings: [
+        "gcr\\.io/distroless/nodejs(?<currentValue>\\d+)-debian13:nonroot(?:@sha256:[0-9a-f]{64})?",
+      ],
+      autoReplaceStringTemplate: "gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot",
+      datasourceTemplate: "node-version",
+      depNameTemplate: "node",
+      depTypeTemplate: "distroless",
+      versioningTemplate: "node",
+    },
+    {
+      customType: "regex",
       // buf has no Renovate manager. A remote plugin is looked up on the Buf
       // Schema Registry itself rather than on the Go module or npm package it
       // is built from: the registry publishes a plugin hours to days after
@@ -247,6 +269,15 @@
       matchDatasources: ["docker"],
       matchPackageNames: ["ghcr.io/publira/base-images/**"],
       branchTopic: "{{{depNameSanitized}}}",
+    },
+    // The distroless manager above drops the digest it cannot resolve.
+    {
+      description: "Ask for the digest of the distroless runner image before the Node.js major update is merged.",
+      matchManagers: ["custom.regex"],
+      matchDepTypes: ["distroless"],
+      prBodyNotes: [
+        "**Pin `gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot` by digest before merging.** The Node.js major moved in the image name, and the `@sha256:` digest of the previous image was dropped from the line because it names a manifest of another image. Add the new image's digest, for example from `crane digest gcr.io/distroless/nodejs{{{newValue}}}-debian13:nonroot`. Merged without it, Renovate pins the digest in a follow-up pull request.",
+      ],
     },
     // pubspec.lock must be resolved with the project's Flutter SDK.
     {
